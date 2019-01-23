@@ -1,0 +1,19 @@
+{
+  "name": "rhenan-cocev-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "moment": "^2.23.0",
+    "node-localstorage": "^1.3.1",
+    "node-telegram-bot-api": "^0.30.0",
+    "oracledb": "^3.0.1"
+  }
+}
