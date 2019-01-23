@@ -12,7 +12,6 @@ const TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot(env.token, { polling: true });
 var PessoasAutorizadas = env.pessoasAutorizadas;
 
-//teste 
 bot.onText(/\/pk/, (ctx,match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
