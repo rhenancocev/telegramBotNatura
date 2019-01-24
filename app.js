@@ -20,7 +20,7 @@ bot.onText(/\/pk/, (ctx,match) => {
     var pk_token = texto.substring(4);
 
     if(pk_token === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /pk + cód da consultora. \n Exemplo: /pk 12345567")
+       bot.sendMessage(chatId, nome + ", digite o comando /pk + <code>cód da consultora</code>. \n Exemplo: /pk 12345567", { parse_mode: "HTML" })
     }else{
         if(!isNumber(pk_token)){
             bot.sendMessage(chatId, nome + ", o texto digitado: " + pk_token + ", não é um cód de CN valido!");
@@ -40,7 +40,7 @@ bot.onText(/\/cartao/, (ctx,match) => {
     var nm_pedido = texto.substring(7);
 
     if(nm_pedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /cartao + o numero do pedido. \n Exemplo: /cartao 123456789");
+        bot.sendMessage(chatId, nome + ", digite o comando /cartao + <code>numero do pedido</code>. \n Exemplo: /cartao 123456789", { parse_mode: "HTML" });
     }else {
         if (!isNumber(nm_pedido)){
             bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!");
@@ -61,7 +61,7 @@ bot.onText(/\/boleto/, (ctx, match) => {
     var num_pedido = texto.substring(7);
 
     if(num_pedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /boleto + o numero do pedido. \n Exemplo: /boleto 123456789" );
+        bot.sendMessage(chatId, nome + ", digite o comando /boleto + <code>numero do pedido</code>. \n Exemplo: /boleto 123456789" , { parse_mode: "HTML" });
     }else {
 
     if (!isNumber(num_pedido)){
