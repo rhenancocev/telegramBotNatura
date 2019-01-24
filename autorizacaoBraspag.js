@@ -15,6 +15,7 @@ module.exports = {
                     sispgt.transacao_status ts
                     where p.id_trans_payload = ts.id_trans_payload
                     and p.id_order =  ${param}
+                    and ts.ds_mensagem_adquirente <> 'Success.'
                     order by ts.dt_transacao`;
 
     sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
