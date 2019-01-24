@@ -119,13 +119,13 @@ function enviaBoasVindas(ctx) {
     const chatId = ctx.chat.id;
     const nome = ctx.from.first_name + ' ' + ctx.from.last_name;
     // send a message to the chat acknowledging receipt of their message
-    bot.sendMessage(chatId, 'ChatId: '+ chatId +'\n\n' + 'Olá ' + nome + ', seja Bem-Vindo. Segue os comandos disponíveis:'
+    bot.sendMessage(chatId, 'ChatId: ' + '<code>' + chatId + '</code>' +'\n\n' + 'Olá ' + nome + ', seja Bem-Vindo. Segue os comandos disponíveis:'
         + '\n\n' + 'Se deseja saber a data de cancelamento de um pedido boleto à vista, utilize o comando:'
-        + '\n' + '-> ' + "/boleto [numero do pedido]" + '\n Exemplo: /boleto 123456789'
+        + '\n' + '-> ' + "/boleto <code>numero do pedido</code>" + '\n Exemplo: /boleto <code>123456789</code>'
         + '\n\n' + 'Se deseja saber a PK da consultora referente a PagSeguro, utilize o comando:'
-        + '\n' + '-> ' + "/pk [código da consultora]" + '\n Exemplo: /pk 123456789'
+        + '\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
         + '\n\n' + 'Se deseja saber o motivo do cancelamento de um pedido feito pelo cartão de crédito, utilize o comando:'
-        + '\n' + '-> ' + "/cartao [numero do pedido]" + '\n Exemplo: /cartao 123456789');
+        + '\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 function autorizacaoNegada(ctx){
@@ -138,10 +138,10 @@ function autorizacaoNegada(ctx){
 function enviarComandos(ctx){
     const chatId = ctx.chat.id;
     const nome = ctx.from.first_name;
-    bot.sendMessage(chatId, 'ChatId: ' + chatId + '\n\n' + nome + ', os comandos disponiveis são:'
-        + '\n\n-> ' + "/boleto [numero do pedido]"  + '\n Exemplo: /boleto 123456789'
-        + '\n\n' + '-> ' + "/pk [código da consultora]" + '\n Exemplo: /pk 123456789'
-        + '\n\n' + '->' + "/cartao [numero do pedido]" + '\n Exemplo: /cartao 123456789');
+    bot.sendMessage(chatId, 'ChatId: ' + '<code>' + chatId + '</code>' + '\n\n' + nome + ', os comandos disponiveis são:'
+        + '\n\n-> ' + "/boleto <code>numero do pedido</code>"  + '\n Exemplo: /boleto <code>123456789</code>'
+        + '\n\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
+        + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 // Note: connections should always be released when not needed
