@@ -24,7 +24,7 @@ bot.onText(/\/pk/, (ctx,match) => {
        bot.sendMessage(chatId, nome + ", digite o comando /pk + <code>cód da consultora</code>. \n Exemplo: /pk 12345567", { parse_mode: "HTML" })
     }else{
         if(!isNumber(pk_token)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + pk_token + ", não é um cód de CN valido!");
+            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + pk_token + "</b>" + ", não é um cód de CN valido!", { parse_mode: "HTML" });
         } else if (autorizado){
             buscaToken.pk(ctx, bot, pk_token);
         }else{
@@ -39,20 +39,18 @@ bot.onText(/\/status/, (ctx,match) => {
     const nome = ctx.from.first_name;
     var autorizado = autorizacao(PessoasAutorizadas, chatId);
     var pedido = texto.substring(8);
-    
 
     if(pedido === ''){
         bot.sendMessage(chatId, nome + ", digite o comando /status + <code>numero do pedido</code>. \n Exemplo: /status 123456789", { parse_mode: "HTML" });
     }else {
         if(!isNumber(pedido)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!");
+            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
         }else if (autorizado){
             statusPedido.status_ped(ctx, bot, pedido);
         } else{
             autorizacaoNegada(ctx);
         }
     }
-    
 });
 
 bot.onText(/\/cartao/, (ctx,match) => {
@@ -66,14 +64,14 @@ bot.onText(/\/cartao/, (ctx,match) => {
         bot.sendMessage(chatId, nome + ", digite o comando /cartao + <code>numero do pedido</code>. \n Exemplo: /cartao 123456789", { parse_mode: "HTML" });
     }else {
         if (!isNumber(nm_pedido)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!"); 
+            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + nm_pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" }); 
         }else if(autorizado){
             autorizacaoBraspag.braspag(ctx,bot,nm_pedido);
             } else{
                 autorizacaoNegada(ctx);
             }
     }
-})
+});
 
 bot.onText(/\/boleto/, (ctx, match) => {
     const chatId = ctx.chat.id;
@@ -87,7 +85,7 @@ bot.onText(/\/boleto/, (ctx, match) => {
     }else {
 
     if (!isNumber(num_pedido)){
-        bot.sendMessage(chatId, nome + ", o texto digitado: " + num_pedido + ", não é um número de pedido válido!");
+        bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + num_pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
         
     }/*else {
         vencboleto.venc_boleto(ctx, bot, num_pedido);
@@ -149,14 +147,16 @@ function enviaBoasVindas(ctx) {
         + '\n\n' + 'Se deseja saber a PK da consultora referente a PagSeguro, utilize o comando:'
         + '\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
         + '\n\n' + 'Se deseja saber o motivo do cancelamento de um pedido feito pelo cartão de crédito, utilize o comando:'
-        + '\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>', {parse_mode: "HTML"});
+        + '\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
+        + '\n\n' + 'Se deseja saber o status de um pedido, utilize o comando:'
+        + '\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 function autorizacaoNegada(ctx){
     const chatId = ctx.chat.id;
     const nome = ctx.from.first_name;
     bot.sendMessage(chatId, nome + ", eu não sou autorizado a te responder." 
-    + "\nQualquer dúvida, acionar o Rhenan da SysMap");
+    + "\n Qualquer dúvida, acionar o Rhenan da SysMap");
 }
 
 function enviarComandos(ctx){
@@ -165,7 +165,8 @@ function enviarComandos(ctx){
     bot.sendMessage(chatId, 'ChatId: ' + '<code>' + chatId + '</code>' + '\n\n' + nome + ', os comandos disponiveis são:'
         + '\n\n-> ' + "/boleto <code>numero do pedido</code>"  + '\n Exemplo: /boleto <code>123456789</code>'
         + '\n\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
-        + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>', {parse_mode: "HTML"});
+        + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
+        + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 // Note: connections should always be released when not needed
