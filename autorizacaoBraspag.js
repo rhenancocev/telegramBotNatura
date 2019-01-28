@@ -29,6 +29,10 @@ module.exports = {
 
       function (err, rows) {
         var retorno = "";
+        var pedido = "";
+        var data = "";
+        var motivoCancelamento = "";
+
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
@@ -44,14 +48,16 @@ module.exports = {
 
           
           for (var i = 0; i < rows.length; i++) {
-            retorno += " \n\n" + "PEDIDO --> " + rows[i].NM_PEDIDO
-                        + "\n\n" + "DATA --> " + moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a')
-                        + "\n\n" + "MOTIVO CANCELAMENTO --> " + rows[i].MOTIVO_CANCELAMENTO;
+            pedido += rows[i].NM_PEDIDO;
+            data += moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a')
+            motivoCancelamento += rows[i].MOTIVO_CANCELAMENTO;
 
           }
 
           console.log('PK:' + retorno);
-          bot.sendMessage(ctx.chat.id, "" + retorno);
+          bot.sendMessage(ctx.chat.id, "PEDIDO: " + "<b>" + pedido + "</b>" 
+                                      + "\n\n DATA: " + "<b>" + data + "</b>"
+                                      +  "\n\n MOTIVO CANCELAMENTO: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
