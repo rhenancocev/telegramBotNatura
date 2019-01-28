@@ -3,6 +3,7 @@ var dbConfig = require('./dbconfig.js');
 var vencboleto = require('./vencboleto');
 var buscaToken = require('./busca_token');
 var autorizacaoBraspag = require('./autorizacaoBraspag');
+var statusPedido = require('./statusPedido');
 const moment = require('moment');
 const env = require('./.env');
 const TelegramBot = require('node-telegram-bot-api');
@@ -32,6 +33,28 @@ bot.onText(/\/pk/, (ctx,match) => {
     }
 });
 
+bot.onText(/\/status/, (ctx,match) => {
+    const chatId = ctx.chat.id;
+    const texto = ctx.text;
+    const nome = ctx.from.first_name;
+    var autorizado = autorizacao(PessoasAutorizadas, chatId);
+    var pedido = texto.substring(8);
+    
+
+    if(pedido === ''){
+        bot.sendMessage(chatId, nome + ", digite o comando /status + <code>numero do pedido</code>. \n Exemplo: /status 123456789", { parse_mode: "HTML" });
+    }else {
+        if(!isNumber(pedido)){
+            bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!");
+        }else if (autorizado){
+            statusPedido.status_ped(ctx, bot, pedido);
+        } else{
+            autorizacaoNegada(ctx);
+        }
+    }
+    
+});
+
 bot.onText(/\/cartao/, (ctx,match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -43,8 +66,7 @@ bot.onText(/\/cartao/, (ctx,match) => {
         bot.sendMessage(chatId, nome + ", digite o comando /cartao + <code>numero do pedido</code>. \n Exemplo: /cartao 123456789", { parse_mode: "HTML" });
     }else {
         if (!isNumber(nm_pedido)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!");
-            
+            bot.sendMessage(chatId, nome + ", o texto digitado: " + nm_pedido + ", não é um número de pedido válido!"); 
         }else if(autorizado){
             autorizacaoBraspag.braspag(ctx,bot,nm_pedido);
             } else{
@@ -92,6 +114,8 @@ bot.on('text', (ctx) => {
     }else if(comando == '/cartao'){
 
     }else if (comando == '/pk'){
+
+    }else if (comando == '/status'){
 
     }else {
          enviarComandos(ctx);
