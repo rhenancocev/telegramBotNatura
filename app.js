@@ -43,10 +43,10 @@ bot.onText(/\/lucra/, (ctx, match) => {
     var lucraPedido = texto.substring(6);
 
     if(lucraPedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /pk + <code>cód da consultora</code>. \n Exemplo: /pk 12345567", { parse_mode: "HTML" })
+        bot.sendMessage(chatId, nome + ", digite o comando /lucra + <code>numero do pedido</code>. \n Exemplo: /lucra 12345567", { parse_mode: "HTML" })
      }else{
          if(!isNumber(lucraPedido)){
-             bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + lucraPedido + "</b>" + ", não é um cód de CN valido!", { parse_mode: "HTML" });
+             bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + lucraPedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
          } else if (autorizado){
              lucratividade.lucratividade_pedido(ctx, bot, lucraPedido);
          }else{
