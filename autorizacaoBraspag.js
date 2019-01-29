@@ -55,9 +55,9 @@ module.exports = {
           }
 
           console.log('PK:' + retorno);
-          bot.sendMessage(ctx.chat.id, "PEDIDO: " + "<b>" + pedido + "</b>" 
-                                      + "\n\n DATA: " + "<b>" + data + "</b>"
-                                      +  "\n\n MOTIVO CANCELAMENTO: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
+          bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + pedido + "</b>" 
+                                      + "\n\n Data: " + "<b>" + data + "</b>"
+                                      +  "\n\n Motivo Cancelamento: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
