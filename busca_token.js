@@ -45,12 +45,12 @@ module.exports = {
 
           
           for (var i = 0; i < rows.length; i++) {
-            retorno += "A PK referente a consultora: " + " PK --> " + rows[i].PAGSEGURO;
+            retorno += rows[i].PAGSEGURO;
 
           }
 
           console.log('PK:' + retorno);
-          bot.sendMessage(ctx.chat.id, "" + retorno);
+          bot.sendMessage(ctx.chat.id, "A PK referente a consultora: " + " PK --> " + "<b>" + retorno + "</b>", {parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
