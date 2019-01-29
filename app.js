@@ -5,7 +5,7 @@ var buscaToken = require('./busca_token');
 var autorizacaoBraspag = require('./autorizacaoBraspag');
 var statusPedido = require('./statusPedido');
 var lucratividade = require('./lucratividade');
-var boasVindas = require('./enviarBoasVindas');
+var enviarMensagens = require('./enviarMensagens');
 const moment = require('moment');
 const env = require('./.env');
 const TelegramBot = require('node-telegram-bot-api');
@@ -129,7 +129,7 @@ bot.on('text', (ctx) => {
      const comando = a[0];
 
     if (comando == '/start'){
-        boasVindas.enviarBoasVindas(ctx);
+        enviarMensagens.enviarBoasVindas(ctx);
     }else if (comando == '/boleto'){
         
     }else if(comando == '/cartao'){
@@ -141,7 +141,7 @@ bot.on('text', (ctx) => {
     }else if(comando == '/lucra'){
 
     }else{
-         enviarComandos(ctx);
+         enviarMensagens.enviarComandos(ctx);
     }
 
 });
@@ -167,17 +167,6 @@ function autorizacaoNegada(ctx){
     const nome = ctx.from.first_name;
     bot.sendMessage(chatId, nome + ", eu não sou autorizado a te responder." 
     + "\n Qualquer dúvida, acionar o Rhenan da SysMap");
-}
-
-function enviarComandos(ctx){
-    const chatId = ctx.chat.id;
-    const nome = ctx.from.first_name;
-    bot.sendMessage(chatId, 'ChatId: ' + '<code>' + chatId + '</code>' + '\n\n' + nome + ', os comandos disponiveis são:'
-        + '\n\n-> ' + "/boleto <code>numero do pedido</code>"  + '\n Exemplo: /boleto <code>123456789</code>'
-        + '\n\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
-        + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
-        + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>'
-        + '\n\n' + '-> ' + "/lucra <code>numero do pedido</code>" + '\n Exemplo: /lucra <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 // Note: connections should always be released when not needed
