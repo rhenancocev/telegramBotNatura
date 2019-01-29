@@ -24,6 +24,7 @@ module.exports = {
 
       function (err, rows) {
         var retorno = "";
+        var retornoPedido = "";
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
@@ -39,12 +40,14 @@ module.exports = {
 
           
           for (var i = 0; i < rows.length; i++) {
-            retorno += "Data Cancelamento Pedido: " + moment(rows[i].DATA).format('DD-MM-YYYY') + " --> Pedido: " + rows[i].PEDIDO;
+            retorno += "" + moment(rows[i].DATA).format('DD-MM-YYYY'); //+ " --> Pedido: " + rows[i].PEDIDO;
+            retornoPedido += rows[i].PEDIDO;
 
           }
 
           console.log('Numero do Pedido: ' + retorno);
-          bot.sendMessage(ctx.chat.id, "" + retorno);
+          bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
+                                     + "\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
