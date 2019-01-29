@@ -4,6 +4,8 @@ var vencboleto = require('./vencboleto');
 var buscaToken = require('./busca_token');
 var autorizacaoBraspag = require('./autorizacaoBraspag');
 var statusPedido = require('./statusPedido');
+var lucratividade = require('./lucratividade');
+var boasVindas = require('./enviarBoasVindas');
 const moment = require('moment');
 const env = require('./.env');
 const TelegramBot = require('node-telegram-bot-api');
@@ -32,6 +34,27 @@ bot.onText(/\/pk/, (ctx,match) => {
         }
     }
 });
+
+bot.onText(/\/lucra/, (ctx, match) => {
+    const chatId = ctx.chat.id;
+    const texto = ctx.text;
+    const nome = ctx.from.first_name;
+    var autorizado = autorizacao(PessoasAutorizadas, chatId);
+    var lucraPedido = texto.substring(6);
+
+    if(lucraPedido === ''){
+        bot.sendMessage(chatId, nome + ", digite o comando /pk + <code>cód da consultora</code>. \n Exemplo: /pk 12345567", { parse_mode: "HTML" })
+     }else{
+         if(!isNumber(lucraPedido)){
+             bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + lucraPedido + "</b>" + ", não é um cód de CN valido!", { parse_mode: "HTML" });
+         } else if (autorizado){
+             lucratividade.lucratividade_pedido(ctx, bot, lucraPedido);
+         }else{
+             autorizacaoNegada(ctx);
+         }
+     }
+
+})
 
 bot.onText(/\/status/, (ctx,match) => {
     const chatId = ctx.chat.id;
@@ -106,7 +129,7 @@ bot.on('text', (ctx) => {
      const comando = a[0];
 
     if (comando == '/start'){
-        enviaBoasVindas(ctx);
+        boasVindas.enviarBoasVindas(ctx);
     }else if (comando == '/boleto'){
         
     }else if(comando == '/cartao'){
@@ -114,6 +137,8 @@ bot.on('text', (ctx) => {
     }else if (comando == '/pk'){
 
     }else if (comando == '/status'){
+
+    }else if(comando == '/lucra'){
 
     }else{
          enviarComandos(ctx);
@@ -137,21 +162,6 @@ function autorizacao(PessoasAutorizadas, chatId){
     return autorizado;
 }    
 
-function enviaBoasVindas(ctx) {
-    const chatId = ctx.chat.id;
-    const nome = ctx.from.first_name + ' ' + ctx.from.last_name;
-    // send a message to the chat acknowledging receipt of their message
-    bot.sendMessage(chatId, 'ChatId: ' + '<code>' + chatId + '</code>' +'\n\n' + 'Olá ' + nome + ', seja Bem-Vindo. Segue os comandos disponíveis:'
-        + '\n\n' + 'Se deseja saber a data de cancelamento de um pedido boleto à vista, utilize o comando:'
-        + '\n' + '-> ' + "/boleto <code>numero do pedido</code>" + '\n Exemplo: /boleto <code>123456789</code>'
-        + '\n\n' + 'Se deseja saber a PK da consultora referente a PagSeguro, utilize o comando:'
-        + '\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
-        + '\n\n' + 'Se deseja saber o motivo do cancelamento de um pedido feito pelo cartão de crédito, utilize o comando:'
-        + '\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
-        + '\n\n' + 'Se deseja saber o status de um pedido, utilize o comando:'
-        + '\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>', {parse_mode: "HTML"});
-}
-
 function autorizacaoNegada(ctx){
     const chatId = ctx.chat.id;
     const nome = ctx.from.first_name;
@@ -166,7 +176,8 @@ function enviarComandos(ctx){
         + '\n\n-> ' + "/boleto <code>numero do pedido</code>"  + '\n Exemplo: /boleto <code>123456789</code>'
         + '\n\n' + '-> ' + "/pk <code>código da consultora</code>" + '\n Exemplo: /pk <code>123456789</code>'
         + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
-        + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>', {parse_mode: "HTML"});
+        + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>'
+        + '\n\n' + '-> ' + "/lucra <code>numero do pedido</code>" + '\n Exemplo: /lucra <code>123456789</code>', {parse_mode: "HTML"});
 }
 
 // Note: connections should always be released when not needed
