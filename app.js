@@ -105,9 +105,9 @@ bot.on('text', (ctx) => {
     a = ctx.text.split(" ");
      const comando = a[0];
 
-    if (comando == '/start') {
+    if (comando == '/start'){
         enviaBoasVindas(ctx);
-    } else if (comando == '/boleto') {
+    }else if (comando == '/boleto'){
         
     }else if(comando == '/cartao'){
 
@@ -115,7 +115,7 @@ bot.on('text', (ctx) => {
 
     }else if (comando == '/status'){
 
-    }else {
+    }else{
          enviarComandos(ctx);
     }
 
