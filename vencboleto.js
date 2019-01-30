@@ -8,7 +8,9 @@ module.exports = {
 
   venc_boleto: function (ctx, bot, param) {
 
-    var sql_query = `select trunc(dt_cancelamento_pedido) as DATA , nm_pedido as PEDIDO
+    var sql_query = `select trunc(dt_cancelamento_pedido) as DATA, 
+    nm_pedido as PEDIDO,
+    dt_vencimento_boleto as DATA_BOLETO
     from siscpt.pedido_dados_pagamento 
     where nm_pedido = ${param}
     and cd_forma_pagamento = 'ZVIS'`;
@@ -25,6 +27,8 @@ module.exports = {
       function (err, rows) {
         var retorno = "";
         var retornoPedido = "";
+        var retornoBoleto = "";
+
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
@@ -40,13 +44,15 @@ module.exports = {
 
           
           for (var i = 0; i < rows.length; i++) {
-            retorno += "" + moment(rows[i].DATA).format('DD-MM-YYYY'); //+ " --> Pedido: " + rows[i].PEDIDO;
+            retorno += "" + moment(rows[i].DATA).format('DD-MM-YYYY');
             retornoPedido += rows[i].PEDIDO;
+            retornoBoleto += moment(rows[i].DATA_BOLETO).format('DD-MM-YYYY');
 
           }
 
-          console.log('Numero do Pedido: ' + retorno);
+          console.log('Pedido: ' + retornoPedido + '\nData vencimento boleto' + retornoBoleto + '\nData cancelamento Pedido' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
+                                     + "\nData vencimento do boleto: " + "<b>" + retornoBoleto + "</b>"
                                      + "\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
