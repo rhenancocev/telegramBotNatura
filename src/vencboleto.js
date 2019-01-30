@@ -1,24 +1,19 @@
 var oracledb = require('oracledb');
-var dbConfig = require('./dbconfig.js');
-var sqlutil = require('./sqlutil.js');
+var dbConfig = require('../banco/dbconfig.js');
+var sqlutil = require('../banco/sqlutil.js');
 const moment = require('moment');
 
 module.exports = {
 
 
-  lucratividade_pedido: function (ctx, bot, param) {
+  venc_boleto: function (ctx, bot, param) {
 
-    var sql_query = `select replace (round ((sum(ip.vl_unitario_tabela) - sum(ip.vl_unitario_sem_lucratividade))/sum(ip.vl_unitario_tabela),2),'.','')||'%' as LUCRATIVIDADE,
-    ip.nm_pedido as PEDIDO,
-    nc.no_nivel as NIVEL_PEDIDO_FINALIZADO
-    from siscpt.item_pedido ip,
-         siscpt.pedido_niveis_cn nc
-    where ip.nm_pedido = ${param}   
-    and ip.id_origem_item_pedido = 1
-    and ip.nm_pedido = nc.nm_pedido
-    and ip.nm_ciclo_pedido = nc.nm_ciclo_pedido
-    and (ip.vl_unitario_tabela - ip.vl_unitario_sem_lucratividade)/ip.vl_unitario_tabela > 0
-    group by ip.nm_pedido, NC.NO_NIVEL`;
+    var sql_query = `select trunc(dt_cancelamento_pedido) as DATA, 
+    nm_pedido as PEDIDO,
+    dt_vencimento_boleto as DATA_BOLETO
+    from siscpt.pedido_dados_pagamento 
+    where nm_pedido = ${param}
+    and cd_forma_pagamento = 'ZVIS'`;
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 
@@ -32,8 +27,7 @@ module.exports = {
       function (err, rows) {
         var retorno = "";
         var retornoPedido = "";
-        var retornoLucratividade = "";
-        var retornoNivel = "";
+        var retornoBoleto = "";
 
         if (err) {
           console.error(err);
@@ -41,24 +35,25 @@ module.exports = {
         } else if (rows.length <= 0){
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
           
-          retorno += "O pedido está cancelado/Em andamento ou não existe no nosso banco de dados"
+          retorno += "O pedido não é Boleto à Vista ou não existe no nosso banco de dados"
           bot.sendMessage(ctx.chat.id, "" + retorno);
         } 
         else if (rows.length > 0) {
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
 
+
           
           for (var i = 0; i < rows.length; i++) {
-            retornoLucratividade += rows[i].LUCRATIVIDADE;
+            retorno += "" + moment(rows[i].DATA).format('DD-MM-YYYY');
             retornoPedido += rows[i].PEDIDO;
-            retornoNivel += rows[i].NIVEL_PEDIDO_FINALIZADO;
+            retornoBoleto += moment(rows[i].DATA_BOLETO).format('DD-MM-YYYY');
 
           }
 
-          console.log('Numero do Pedido: ' + retorno);
+          console.log('Pedido: ' + retornoPedido + '\nData vencimento boleto' + retornoBoleto + '\nData cancelamento Pedido' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
-                                     + "\nLucratividade: " + "<b>" + retornoLucratividade + "</b>"
-                                     + "\nNivel do pedido: " + "<b>" + retornoNivel + "</b>", { parse_mode: "HTML" });
+                                     + "\nData vencimento do boleto: " + "<b>" + retornoBoleto + "</b>"
+                                     + "\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);

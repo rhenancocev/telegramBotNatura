@@ -1,6 +1,6 @@
 var oracledb = require('oracledb');
-var dbConfig = require('./dbconfig.js');
-var sqlutil = require('./sqlutil.js');
+var dbConfig = require('../banco/dbconfig.js');
+var sqlutil = require('../banco/sqlutil.js');
 const moment = require('moment');
 
 module.exports = {

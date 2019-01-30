@@ -1,21 +1,25 @@
 var oracledb = require('oracledb');
-var dbConfig = require('./dbconfig.js');
-var sqlutil = require('./sqlutil.js');
+var dbConfig = require('../banco/dbconfig.js');
+var sqlutil = require('../banco/sqlutil.js');
 const moment = require('moment');
 
 module.exports = {
+//48255246
 
+  pk: function (ctx, bot, param) {
 
-  venc_boleto: function (ctx, bot, param) {
+    var sql_query = `SELECT PK_PAGSEGURO as PAGSEGURO
+    FROM (SELECT AUT.PK_PAGSEGURO
+        FROM SISMPGTO.T_CADASTRO_MPOS CAD,                         
+              SISMPGTO.T_NOTIFICACAO   NOTI,
+              SISMPGTO.T_AUTORIZACAO   AUT
+        WHERE CAD.CD_CADASTRO_MPOS = NOTI.CD_CADASTRO_MPOS
+        AND AUT.CD_NOTIFICACAO = NOTI.CD_NOTIFICACAO
+        AND CAD.CD_CONSULTORA = ${param}
+        ORDER BY CAD.DT_CRIACAO DESC)
+        WHERE ROWNUM=1`;
 
-    var sql_query = `select trunc(dt_cancelamento_pedido) as DATA, 
-    nm_pedido as PEDIDO,
-    dt_vencimento_boleto as DATA_BOLETO
-    from siscpt.pedido_dados_pagamento 
-    where nm_pedido = ${param}
-    and cd_forma_pagamento = 'ZVIS'`;
-
-    sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
+    sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
 
   },
 
@@ -26,16 +30,13 @@ module.exports = {
 
       function (err, rows) {
         var retorno = "";
-        var retornoPedido = "";
-        var retornoBoleto = "";
-
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
         } else if (rows.length <= 0){
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
           
-          retorno += "O pedido não é Boleto à Vista ou não existe no nosso banco de dados"
+          retorno += "Não existe PK para a consultora digitada!";
           bot.sendMessage(ctx.chat.id, "" + retorno);
         } 
         else if (rows.length > 0) {
@@ -44,16 +45,12 @@ module.exports = {
 
           
           for (var i = 0; i < rows.length; i++) {
-            retorno += "" + moment(rows[i].DATA).format('DD-MM-YYYY');
-            retornoPedido += rows[i].PEDIDO;
-            retornoBoleto += moment(rows[i].DATA_BOLETO).format('DD-MM-YYYY');
+            retorno += rows[i].PAGSEGURO;
 
           }
 
-          console.log('Pedido: ' + retornoPedido + '\nData vencimento boleto' + retornoBoleto + '\nData cancelamento Pedido' + retorno);
-          bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
-                                     + "\nData vencimento do boleto: " + "<b>" + retornoBoleto + "</b>"
-                                     + "\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
+          console.log('PK:' + retorno);
+          bot.sendMessage(ctx.chat.id, "A PK referente a consultora: " + " PK --> " + "<b>" + retorno + "</b>", {parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
