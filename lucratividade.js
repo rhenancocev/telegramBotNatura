@@ -8,13 +8,17 @@ module.exports = {
 
   lucratividade_pedido: function (ctx, bot, param) {
 
-    var sql_query = `select replace (round ((sum(vl_unitario_tabela) - sum(vl_unitario_sem_lucratividade))/sum(vl_unitario_tabela),2),'.','')||'%' as LUCRATIVIDADE,
-    nm_pedido as PEDIDO
-from siscpt.item_pedido
-where nm_pedido = ${param}   
-and id_origem_item_pedido = 1
-and (vl_unitario_tabela - vl_unitario_sem_lucratividade)/vl_unitario_tabela > 0
-group by nm_pedido`;
+    var sql_query = `select replace (round ((sum(ip.vl_unitario_tabela) - sum(ip.vl_unitario_sem_lucratividade))/sum(ip.vl_unitario_tabela),2),'.','')||'%' as LUCRATIVIDADE,
+    ip.nm_pedido as PEDIDO,
+    nc.no_nivel as NIVEL_PEDIDO_FINALIZADO
+    from siscpt.item_pedido ip,
+         siscpt.pedido_niveis_cn nc
+    where ip.nm_pedido = ${param}   
+    and ip.id_origem_item_pedido = 1
+    and ip.nm_pedido = nc.nm_pedido
+    and ip.nm_ciclo_pedido = nc.nm_ciclo_pedido
+    and (ip.vl_unitario_tabela - ip.vl_unitario_sem_lucratividade)/ip.vl_unitario_tabela > 0
+    group by ip.nm_pedido, NC.NO_NIVEL`;
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 
@@ -29,6 +33,8 @@ group by nm_pedido`;
         var retorno = "";
         var retornoPedido = "";
         var retornoLucratividade = "";
+        var retornoNivel = "";
+
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
@@ -41,17 +47,18 @@ group by nm_pedido`;
         else if (rows.length > 0) {
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
 
-
           
           for (var i = 0; i < rows.length; i++) {
             retornoLucratividade += rows[i].LUCRATIVIDADE;
             retornoPedido += rows[i].PEDIDO;
+            retornoNivel += rows[i].NIVEL_PEDIDO_FINALIZADO;
 
           }
 
           console.log('Numero do Pedido: ' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
-                                     + "\nLucratividade: " + "<b>" + retornoLucratividade + "</b>", { parse_mode: "HTML" });
+                                     + "\nLucratividade: " + "<b>" + retornoLucratividade + "</b>"
+                                     + "\nNivel do pedido: " + "<b>" + retornoNivel + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
