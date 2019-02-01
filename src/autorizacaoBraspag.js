@@ -39,7 +39,7 @@ module.exports = {
         } else if (rows.length <= 0){
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
           
-          retorno += "O pedido informado não existe no nosso banco de dados ou não ouve retorno da Braspag para o pedido informado";
+          retorno += "O pedido informado não existe no nosso banco de dados ou não houve retorno da Braspag.";
           bot.sendMessage(ctx.chat.id, "" + retorno);
         } 
         else if (rows.length > 0) {
