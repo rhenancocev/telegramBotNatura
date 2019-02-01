@@ -32,6 +32,21 @@ module.exports = {
             + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
             + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>'
             + '\n\n' + '-> ' + "/lucra <code>numero do pedido</code>" + '\n Exemplo: /lucra <code>123456789</code>', {parse_mode: "HTML"});
+        },
+
+        enviarRespostaCasoVazia: function(ctx, x, y){
+        const chatId = ctx.chat.id;
+        const nome = ctx.from.first_name;
+        bot.sendMessage(chatId, nome + ", digite o comando " + x + " <code>" + y + "</code>." 
+                                     + "\n Exemplo: " + x + " 123456789", { parse_mode: "HTML" })
+        },
+
+        enviarRespostaIfNotNumber: function(ctx, x, y){
+        const chatId = ctx.chat.id;
+        const nome = ctx.from.first_name;  
+        bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + x + "</b>" 
+                                     + ", não é um " + y + " válido!", { parse_mode: "HTML" } )
+
         }
 
 }
