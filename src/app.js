@@ -20,7 +20,7 @@ bot.onText(/\/pk/, (ctx,match) => {
     var pk_token = texto.substring(4);
     const x = "/pk";
     const y = "cód da consultora";
-    const z = "cód de CN"
+    const z = "cód de CN";
 
     if(pk_token === ''){
         enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
