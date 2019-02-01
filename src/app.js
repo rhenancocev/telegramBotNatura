@@ -1,5 +1,3 @@
-var oracledb = require('oracledb');
-var dbConfig = require('../banco/dbconfig.js');
 var vencboleto = require('./vencboleto');
 var buscaToken = require('./busca_token');
 var autorizacaoBraspag = require('./autorizacaoBraspag');
@@ -7,7 +5,6 @@ var statusPedido = require('./statusPedido');
 var lucratividade = require('./lucratividade');
 var enviarMensagens = require('../tools/enviarMensagens');
 var funcoes = require('../tools/funcoes');
-const moment = require('moment');
 const env = require('../tokenAcesso/.env');
 const TelegramBot = require('node-telegram-bot-api');
 // replace the value below with the Telegram token you receive from @BotFather
@@ -151,21 +148,3 @@ bot.on('text', (ctx) => {
     }
 
 });
-
-// Note: connections should always be released when not needed
-function doRelease(connection) {
-    connection.close(
-        function (err) {
-            if (err) {
-                console.error(err.message);
-            }
-        });
-}
-
-function doClose(connection, resultSet) {
-    resultSet.close(
-        function (err) {
-            if (err) { console.error(err.message); }
-            doRelease(connection);
-        });
-}
