@@ -55,7 +55,7 @@ bot.onText(/\/lucra/, (ctx, match) => {
          }
      }
 
-})
+});
 
 bot.onText(/\/status/, (ctx,match) => {
     const chatId = ctx.chat.id;
