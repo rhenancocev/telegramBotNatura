@@ -22,12 +22,15 @@ bot.onText(/\/pk/, (ctx,match) => {
     const nome = ctx.from.first_name;
     var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
     var pk_token = texto.substring(4);
+    const x = "/pk";
+    const y = "cód da consultora";
+    const z = "cód de consultora"
 
     if(pk_token === ''){
-       bot.sendMessage(chatId, nome + ", digite o comando /pk + <code>cód da consultora</code>. \n Exemplo: /pk 12345567", { parse_mode: "HTML" })
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
     }else{
         if(!funcoes.isNumber(pk_token)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + pk_token + "</b>" + ", não é um cód de CN valido!", { parse_mode: "HTML" });
+            enviarMensagens.enviarRespostaIfNotNumber(ctx, pk_token, z);
         } else if (autorizado){
             buscaToken.pk(ctx, bot, pk_token);
         }else{
@@ -42,12 +45,14 @@ bot.onText(/\/lucra/, (ctx, match) => {
     const nome = ctx.from.first_name;
     var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
     var lucraPedido = texto.substring(6);
+    const x = "/lucra";
+    const y = "numero do pedido";
 
     if(lucraPedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /lucra + <code>numero do pedido</code>. \n Exemplo: /lucra 12345567", { parse_mode: "HTML" })
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
      }else{
          if(!funcoes.isNumber(lucraPedido)){
-             bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + lucraPedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
+             enviarMensagens.enviarRespostaIfNotNumber(ctx, lucraPedido, y);
          } else if (autorizado){
              lucratividade.lucratividade_pedido(ctx, bot, lucraPedido);
          }else{
@@ -63,12 +68,14 @@ bot.onText(/\/status/, (ctx,match) => {
     const nome = ctx.from.first_name;
     var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
     var pedido = texto.substring(8);
+    const x = "/status";
+    const y = "numero do pedido";
 
     if(pedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /status + <code>numero do pedido</code>. \n Exemplo: /status 123456789", { parse_mode: "HTML" });
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
     }else {
         if(!funcoes.isNumber(pedido)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
+            enviarMensagens.enviarRespostaIfNotNumber(ctx, pedido, y);
         }else if (autorizado){
             statusPedido.status_ped(ctx, bot, pedido);
         } else{
@@ -83,12 +90,14 @@ bot.onText(/\/cartao/, (ctx,match) => {
     const nome = ctx.from.first_name;
     var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
     var nm_pedido = texto.substring(7);
+    const x = "/cartao";
+    const y = "numero do pedido";
 
     if(nm_pedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /cartao + <code>numero do pedido</code>. \n Exemplo: /cartao 123456789", { parse_mode: "HTML" });
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
     }else {
         if (!funcoes.isNumber(nm_pedido)){
-            bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + nm_pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" }); 
+            enviarMensagens.enviarRespostaIfNotNumber(ctx, nm_pedido, y); 
         }else if(autorizado){
             autorizacaoBraspag.braspag(ctx,bot,nm_pedido);
             } else{
@@ -103,14 +112,15 @@ bot.onText(/\/boleto/, (ctx, match) => {
     const nome = ctx.from.first_name;
     var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
     var num_pedido = texto.substring(7);
+    const x = "/boleto";
+    const y = "numero do pedido";
 
     if(num_pedido === ''){
-        bot.sendMessage(chatId, nome + ", digite o comando /boleto + <code>numero do pedido</code>. \n Exemplo: /boleto 123456789" , { parse_mode: "HTML" });
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
     }else {
 
     if (!funcoes.isNumber(num_pedido)){
-        bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + num_pedido + "</b>" + ", não é um número de pedido válido!", { parse_mode: "HTML" });
-        
+        enviarMensagens.enviarRespostaIfNotNumber(ctx, num_pedido, y);
     }/*else {
         vencboleto.venc_boleto(ctx, bot, num_pedido);
     }*/
