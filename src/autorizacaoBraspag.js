@@ -9,13 +9,16 @@ module.exports = {
   braspag: function (ctx, bot, param) {
 
     var sql_query = `select p.id_order as NM_PEDIDO, 
-                            ts.dt_transacao AS DATA_TRANSACAO,
+                            (select max(ts1.dt_transacao) 
+                                    from sispgt.transacao_status ts1 
+                                      where ts1.id_trans_payload = ts.id_trans_payload) as DATA_TRANSACAO,
+                            p.vr_pagamento as VALOR_PAGAMENTO,
                             ts.ds_mensagem_adquirente as MOTIVO_CANCELAMENTO
                     from sispgt.pagamentos p,
                     sispgt.transacao_status ts
                     where p.id_trans_payload = ts.id_trans_payload
                     and p.id_order =  ${param}
-                    and ts.ds_mensagem_adquirente <> 'Success.'
+                    and rownum = 1
                     order by ts.dt_transacao`;
 
     sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
@@ -32,6 +35,7 @@ module.exports = {
         var pedido = "";
         var data = "";
         var motivoCancelamento = "";
+        var valorPagamento = ""
 
         if (err) {
           console.error(err);
@@ -49,15 +53,18 @@ module.exports = {
           
           for (var i = 0; i < rows.length; i++) {
             pedido += rows[i].NM_PEDIDO;
-            data += moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a')
+            data += moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a');
             motivoCancelamento += rows[i].MOTIVO_CANCELAMENTO;
+            valorPagamento += rows[i].VALOR_PAGAMENTO;
+
 
           }
-
+            
           console.log('PK:' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + pedido + "</b>" 
-                                      + "\n\n Data: " + "<b>" + data + "</b>"
-                                      +  "\n\n Motivo Cancelamento: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
+                                      + "\n\nData: " + "<b>" + data + "</b>"
+                                      + "\n\nValor da transação: " + "<b>" + valorPagamento + "</b>"
+                                      +  "\n\nÚltimo status recebido da braspag: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
