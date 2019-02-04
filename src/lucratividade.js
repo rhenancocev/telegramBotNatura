@@ -8,9 +8,10 @@ module.exports = {
 
   lucratividade_pedido: function (ctx, bot, param) {
 
-    var sql_query = `select replace (round ((sum(ip.vl_unitario_tabela) - sum(ip.vl_unitario_sem_lucratividade))/sum(ip.vl_unitario_tabela),2),'.','')||'%' as LUCRATIVIDADE,
+    var sql_query = `select replace (round ((sum(ip.vl_unitario_tabela) - sum(ip.vl_unitario_sem_lucratividade))/sum(ip.vl_unitario_tabela),2)*100,'.','')||'%' as LUCRATIVIDADE,
     ip.nm_pedido as PEDIDO,
-    nc.no_nivel as NIVEL_PEDIDO_FINALIZADO
+    nc.no_nivel as NIVEL_PEDIDO_FINALIZADO,
+    ip.nm_ciclo_pedido as CICLO
     from siscpt.item_pedido ip,
          siscpt.pedido_niveis_cn nc
     where ip.nm_pedido = ${param}   
@@ -18,7 +19,7 @@ module.exports = {
     and ip.nm_pedido = nc.nm_pedido
     and ip.nm_ciclo_pedido = nc.nm_ciclo_pedido
     and (ip.vl_unitario_tabela - ip.vl_unitario_sem_lucratividade)/ip.vl_unitario_tabela > 0
-    group by ip.nm_pedido, NC.NO_NIVEL`;
+    group by ip.nm_pedido, NC.NO_NIVEL, ip.nm_ciclo_pedido`;
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 
@@ -34,6 +35,7 @@ module.exports = {
         var retornoPedido = "";
         var retornoLucratividade = "";
         var retornoNivel = "";
+        var retornoCiclo = "";
 
         if (err) {
           console.error(err);
@@ -52,11 +54,13 @@ module.exports = {
             retornoLucratividade += rows[i].LUCRATIVIDADE;
             retornoPedido += rows[i].PEDIDO;
             retornoNivel += rows[i].NIVEL_PEDIDO_FINALIZADO;
+            retornoCiclo += rows[i].CICLO;
 
           }
 
           console.log('Numero do Pedido: ' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
+                                     + "\nCiclo do pedido: " + "<b>" + retornoCiclo + "</b>"
                                      + "\nLucratividade: " + "<b>" + retornoLucratividade + "</b>"
                                      + "\nNivel do pedido: " + "<b>" + retornoNivel + "</b>", { parse_mode: "HTML" });
 
