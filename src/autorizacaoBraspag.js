@@ -9,17 +9,12 @@ module.exports = {
   braspag: function (ctx, bot, param) {
 
     var sql_query = `select p.id_order as NM_PEDIDO, 
-                            (select max(ts1.dt_transacao) 
-                                    from sispgt.transacao_status ts1 
-                                      where ts1.id_trans_payload = ts.id_trans_payload) as DATA_TRANSACAO,
+                            ts.dt_transacao as DATA_TRANSACAO,
                             p.vr_pagamento as VALOR_PAGAMENTO,
                             ts.ds_mensagem_adquirente as MOTIVO_CANCELAMENTO
-                    from sispgt.pagamentos p,
-                    sispgt.transacao_status ts
-                    where p.id_trans_payload = ts.id_trans_payload
-                    and p.id_order =  ${param}
-                    and rownum = 1
-                    order by ts.dt_transacao`;
+                      from sispgt.pagamentos p, sispgt.transacao_status ts
+                        where p.id_trans_payload = ts.id_trans_payload
+                              and p.id_order = ${param}`;
 
     sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
 
@@ -50,21 +45,18 @@ module.exports = {
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
 
 
-          
+          pedido += rows[0].NM_PEDIDO;
+          valorPagamento += rows[0].VALOR_PAGAMENTO;
+
           for (var i = 0; i < rows.length; i++) {
-            pedido += rows[i].NM_PEDIDO;
-            data += moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a');
-            motivoCancelamento += rows[i].MOTIVO_CANCELAMENTO;
-            valorPagamento += rows[i].VALOR_PAGAMENTO;
-
-
+            
+            motivoCancelamento += "\n " + moment(rows[i].DATA_TRANSACAO).format('DD-MM-YYYY, h:mm:ss a') + " - " + rows[i].MOTIVO_CANCELAMENTO + " ";
           }
             
           console.log('PK:' + retorno);
-          bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + pedido + "</b>" 
-                                      + "\n\nData: " + "<b>" + data + "</b>"
+          bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + pedido + "</b>"
                                       + "\n\nValor da transação: " + "<b>" + valorPagamento + "</b>"
-                                      +  "\n\nÚltimo status recebido da braspag: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
+                                      +  "\n\nStatus recebido da braspag: "  + "<b>" + motivoCancelamento + "</b>", { parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
