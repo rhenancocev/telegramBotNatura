@@ -3,6 +3,7 @@ var buscaToken = require('./busca_token');
 var autorizacaoBraspag = require('./autorizacaoBraspag');
 var statusPedido = require('./statusPedido');
 var lucratividade = require('./lucratividade');
+var pontuacao = require('./pontuacao');
 var enviarMensagens = require('../tools/enviarMensagens');
 var funcoes = require('../tools/funcoes');
 const env = require('../tokenAcesso/.env');
@@ -99,6 +100,28 @@ bot.onText(/\/cartao/, (ctx,match) => {
     }
 });
 
+bot.onText(/\/pts/, (ctx, match) => {
+    const chatId = ctx.chat.id;
+    const texto = ctx.text;
+    var autorizado = funcoes.autorizacao(PessoasAutorizadas, chatId);
+    var cd_consultora = texto.substring(4);
+    const x = "/pts";
+    const y = "cód da consultora";
+    const z = "cód de CN";
+
+    if(cd_consultora === ''){
+        enviarMensagens.enviarRespostaCasoVazia(ctx, x, y);
+    }else{
+        if(!funcoes.isNumber(cd_consultora)){
+            enviarMensagens.enviarRespostaIfNotNumber(ctx, cd_consultora, z);
+        } else if (autorizado){
+            pontuacao.pontuacao_disponivel(ctx, bot, cd_consultora);
+        }else{
+            funcoes.autorizacaoNegada(ctx);
+        }
+    }
+})
+
 bot.onText(/\/boleto/, (ctx, match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -142,6 +165,8 @@ bot.on('text', (ctx) => {
     }else if (comando == '/status'){
 
     }else if(comando == '/lucra'){
+
+    }else if (comando == '/pts'){
 
     }else{
          enviarMensagens.enviarComandos(ctx);
