@@ -30,14 +30,17 @@ module.exports = {
 
       function (err, rows) {
         var retorno = "";
+        const texto = ctx.text;
+        var pk_token = texto.substring(4);
+
         if (err) {
           console.error(err);
           doClose(connection, resultSet);   // always close the ResultSet
         } else if (rows.length <= 0){
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
           
-          retorno += "Não existe PK para a consultora digitada!";
-          bot.sendMessage(ctx.chat.id, "" + retorno);
+          retorno += "Não existe PK para a consultora: ";
+          bot.sendMessage(ctx.chat.id, "" + retorno + "<b>" + pk_token + "</b>" ,{parse_mode: "HTML"});
         } 
         else if (rows.length > 0) {
           console.log("fetchRowsFromRS(): Got " + rows.length + " rows");
@@ -50,8 +53,6 @@ module.exports = {
           }
 
           console.log('PK:' + retorno);
-          const texto = ctx.text;
-          var pk_token = texto.substring(4);
 
           bot.sendMessage(ctx.chat.id, "A PK referente a consultora " + "<b>" + pk_token + "</b>" + " é: <b>" + retorno + "</b>", {parse_mode: "HTML"});
 
