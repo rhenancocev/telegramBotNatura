@@ -52,8 +52,8 @@ module.exports = {
 
           console.log('Pedido: ' + retornoPedido + '\nData vencimento boleto' + retornoBoleto + '\nData cancelamento Pedido' + retorno);
           bot.sendMessage(ctx.chat.id, "Pedido: " + "<b>" + retornoPedido + "</b>"
-                                     + "\nData vencimento do boleto: " + "<b>" + retornoBoleto + "</b>"
-                                     + "\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
+                                     + "\n\nData vencimento do boleto: " + "<b>" + retornoBoleto + "</b>"
+                                     + "\n\nData Cancelamento Pedido: " + "<b>" + retorno + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
