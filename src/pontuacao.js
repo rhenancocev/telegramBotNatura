@@ -36,16 +36,16 @@ module.exports = {
 
 
       function (err, rows) {
-        var retornoCodPessoa = "";
-        var retornoNoCompleto = "";
-        var retornoPontoDisponivel = "";
-        var retornoNivel = "";
-        var retornoCreditoExcedente = "";
-        var retornoCreditoAdicional = "";
-        var retornoCreditoComprometido = "";
-        var retornoCreditoTotalExcedente = "";
-        var retornoCredidotTotalAdicional = "";
-        var retornoCreditoTotalExcedenteEAdicional = "";
+        var retornoCodPessoa                        = "";
+        var retornoNoCompleto                       = "";
+        var retornoPontoDisponivel                  = "";
+        var retornoNivel                            = "";
+        var retornoCreditoExcedente                 = "";
+        var retornoCreditoAdicional                 = "";
+        var retornoCreditoComprometido              = "";
+        var retornoCreditoTotalExcedente            = "";
+        var retornoCredidotTotalAdicional           = "";
+        var retornoCreditoTotalExcedenteEAdicional  = "";
         const texto = ctx.text;
         var cd_consultora = texto.substring(4);
 
@@ -62,17 +62,16 @@ module.exports = {
           
           for (var i = 0; i < rows.length; i++) {
             
-            retornoCodPessoa            += rows[i].CD_PESSOA;
-            retornoNoCompleto           += rows[i].NO_COMPLETO;
-            retornoNivel                += rows[i].NIVEL;
-            retornoPontoDisponivel      += rows[i].QT_PONTO_DISPONIVEL;
-            retornoCreditoExcedente     += rows[i].PC_CREDITO_EXCEDENTE;
-            retornoCreditoAdicional     += rows[i].PC_CREDITO_ADICIONAL;
-            retornoCreditoComprometido  += rows[i].CREDITO_COMPROMETIDO;
-            retornoCreditoTotalExcedente += rows[i].CREDITO_TOTAL_EXCEDENTE;
-            retornoCredidotTotalAdicional += rows[i].CREDITO_TOTAL_ADICIONAL;
-            retornoCreditoTotalExcedenteEAdicional += rows[i].CREDITO_TOTAL_ADI_EXCE;
-
+            retornoCodPessoa                        += rows[i].CD_PESSOA;
+            retornoNoCompleto                       += rows[i].NO_COMPLETO;
+            retornoNivel                            += rows[i].NIVEL;
+            retornoPontoDisponivel                  += rows[i].QT_PONTO_DISPONIVEL;
+            retornoCreditoExcedente                 += rows[i].PC_CREDITO_EXCEDENTE;
+            retornoCreditoAdicional                 += rows[i].PC_CREDITO_ADICIONAL;
+            retornoCreditoComprometido              += rows[i].CREDITO_COMPROMETIDO;
+            retornoCreditoTotalExcedente            += rows[i].CREDITO_TOTAL_EXCEDENTE;
+            retornoCredidotTotalAdicional           += rows[i].CREDITO_TOTAL_ADICIONAL;
+            retornoCreditoTotalExcedenteEAdicional  += rows[i].CREDITO_TOTAL_ADI_EXCE;
 
           }
 
