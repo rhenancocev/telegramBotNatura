@@ -60,9 +60,9 @@ module.exports = {
 
           console.log('cd_pessoa: ' + retornoCodPessoa + '\nNome' + retornoNoCompleto + '\nponto' + retornoPontoDisponivel);
           bot.sendMessage(ctx.chat.id, "Código da CN: " + "<b>" + retornoCodPessoa + "</b>"
-                                     + "\nNome da CN: " + "<b>" + retornoNoCompleto + "</b>"
-                                     + "\nNivel atual da CN: " + "<b>" + retornoNivel + "</b>"
-                                     + "\nPontuação disponivel para CN captar pedido: " + "<b>" + retornoPontoDisponivel + "</b>", { parse_mode: "HTML" });
+                                     + "\n\nNome da CN: " + "<b>" + retornoNoCompleto + "</b>"
+                                     + "\n\nNivel atual da CN: " + "<b>" + retornoNivel + "</b>"
+                                     + "\n\nPontuação disponivel para CN captar pedido: " + "<b>" + retornoPontoDisponivel + "</b>", { parse_mode: "HTML" });
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
