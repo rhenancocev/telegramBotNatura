@@ -54,7 +54,7 @@ module.exports = {
 
           console.log('PK:' + retorno);
 
-          bot.sendMessage(ctx.chat.id, "A PK referente a consultora " + "<b>" + pk_token + "</b>" + " é: <b>" + retorno + "</b>", {parse_mode: "HTML"});
+          bot.sendMessage(ctx.chat.id, "A PK referente a consultora " + "<b>" + pk_token + "</b>" + " é: \n\n<b>" + retorno + "</b>", {parse_mode: "HTML"});
 
           if (rows.length === numRows)      // might be more rows
             fetchRowsFromRS(connection, resultSet, numRows);
