@@ -2,4 +2,4 @@
 *.log
 node_modules
 dbconfig.js
-.png
+*.png
