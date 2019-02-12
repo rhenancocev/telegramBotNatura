@@ -51,6 +51,11 @@ module.exports = {
         bot.sendMessage(chatId, nome + ", o texto digitado: " + "<b>" + x + "</b>" 
                                      + ", não é um " + y + " válido!", { parse_mode: "HTML" } )
 
+        },
+        enviarMensagemDeEspera: function(ctx){
+            const chatId = ctx.chat.id;
+            const nome = ctx.from.first_name
+            bot.sendMessage(chatId, 'Aguarde ' + nome + ', estamos gerando seu relatório...');
         }
 
 }
