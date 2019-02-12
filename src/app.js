@@ -4,6 +4,7 @@ var autorizacaoBraspag = require('./autorizacaoBraspag');
 var statusPedido = require('./statusPedido');
 var lucratividade = require('./lucratividade');
 var pontuacao = require('./pontuacao');
+var pedidosdia = require('./pedidosdia.js');
 var enviarMensagens = require('../tools/enviarMensagens');
 var funcoes = require('../tools/funcoes');
 const env = require('../tokenAcesso/.env');
@@ -13,6 +14,7 @@ const TelegramBot = require('node-telegram-bot-api');
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(env.token, { polling: true });
 var PessoasAutorizadas = env.pessoasAutorizadas;
+var PessoasAutorizadasExecutarPedido = env.PessoasAutorizadasExecutarPedido;
 
 bot.onText(/\/pk/, (ctx,match) => {
     const chatId = ctx.chat.id;
@@ -147,6 +149,17 @@ bot.onText(/\/boleto/, (ctx, match) => {
     }
 });
 
+// /pedidos_dia - Listar quantidade de pedidos dos últimos 30 dias
+bot.onText(/\/pedidos_dia/, (ctx, match) => {
+    const chatId = ctx.chat.id;
+    var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
+    if(autorizado){
+        pedidosdia.pedidos_dia(ctx, bot, true);
+        } else{
+            funcoes.autorizacaoNegada(ctx);
+        }
+});
+
 bot.on('text', (ctx) => {
 
     console.log('ctx', ctx);
@@ -167,6 +180,8 @@ bot.on('text', (ctx) => {
     }else if(comando == '/lucra'){
 
     }else if (comando == '/pts'){
+
+    }else if (comando == '/pedidos_dia'){
 
     }else{
          enviarMensagens.enviarComandos(ctx);
