@@ -23,7 +23,11 @@ module.exports = {
         + '\n\n' + 'Se deseja saber a % de lucratividade de um pedido finalizado, utilize o comando:'
         + '\n' + '-> ' + "/lucra <code>numero do pedido</code>" + '\n Exemplo: /lucra <code>123456789</code>'
         + '\n\n' + 'Se deseja saber a pontuação disponivel para CN captar um pedido, utilize o comando:'
-        + '\n' + '-> ' + "/pts <code>código da consultora</code>" + '\n Exemplo: /pts <code>123456789</code>', {parse_mode: "HTML"});
+        + '\n' + '-> ' + "/pts <code>código da consultora</code>" + '\n Exemplo: /pts <code>123456789</code>'
+        + '\n\n\n' + "Comandos para extração de gráficos: "
+        + '\n\n' + '/pedidos_dia - Pedidos finalizados por dia'
+        + '\n\n' + '/pedidos_minuto - Pedidos finalizados por minuto'
+        + '\n\n' + '/pedidos_hora - Pedidos finalizados por hora', {parse_mode: "HTML"});
 
     },
         enviarComandos: function(ctx){
@@ -35,7 +39,11 @@ module.exports = {
             + '\n\n' + '-> ' + "/cartao <code>numero do pedido</code>" + '\n Exemplo: /cartao <code>123456789</code>'
             + '\n\n' + '-> ' + "/status <code>numero do pedido</code>" + '\n Exemplo: /status <code>123456789</code>'
             + '\n\n' + '-> ' + "/lucra <code>numero do pedido</code>" + '\n Exemplo: /lucra <code>123456789</code>'
-            + '\n\n' + '-> ' + "/pts <code>código da consultora</code>" + '\n Exemplo: /pts <code>123456789</code>', {parse_mode: "HTML"});
+            + '\n\n' + '-> ' + "/pts <code>código da consultora</code>" + '\n Exemplo: /pts <code>123456789</code>'
+            + '\n\n\n' + "Comandos para extração de gráficos: "
+            + '\n\n' + '/pedidos_dia - Pedidos finalizados por dia'        
+            + '\n\n' + '/pedidos_minuto - Pedidos finalizados por minuto'
+            + '\n\n' + '/pedidos_hora - Pedidos finalizados por hora', {parse_mode: "HTML"});
         },
 
         enviarRespostaCasoVazia: function(ctx, x, y){
@@ -55,7 +63,7 @@ module.exports = {
         enviarMensagemDeEspera: function(ctx){
             const chatId = ctx.chat.id;
             const nome = ctx.from.first_name
-            bot.sendMessage(chatId, 'Aguarde ' + nome + ', estamos gerando seu relatório...');
+            bot.sendMessage(chatId, 'Aguarde ' + nome + ', estamos gerando seu gráfico...');
         }
 
 }

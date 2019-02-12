@@ -5,6 +5,8 @@ var statusPedido = require('./statusPedido');
 var lucratividade = require('./lucratividade');
 var pontuacao = require('./pontuacao');
 var pedidosdia = require('./pedidosdia.js');
+var pedidoshora = require('./pedidoshora.js');
+var pedidosminuto = require('./pedidosminuto.js');
 var enviarMensagens = require('../tools/enviarMensagens');
 var funcoes = require('../tools/funcoes');
 const env = require('../tokenAcesso/.env');
@@ -155,6 +157,26 @@ bot.onText(/\/pedidos_dia/, (ctx, match) => {
     var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
     if(autorizado){
         pedidosdia.pedidos_dia(ctx, bot, true);
+        } else{
+            funcoes.autorizacaoNegada(ctx);
+        }
+});
+
+bot.onText(/\/pedidos_hora/, (ctx, match) => {
+    const chatId = ctx.chat.id;
+    var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
+    if(autorizado){
+        pedidoshora.pedidos_hora(ctx, bot, true);
+        } else{
+            funcoes.autorizacaoNegada(ctx);
+        }
+});
+
+bot.onText(/\/pedidos_minuto/, (ctx, match) => {
+    const chatId = ctx.chat.id;
+    var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
+    if(autorizado){
+        pedidosminuto.pedidos_minuto(ctx, bot, true);
         } else{
             funcoes.autorizacaoNegada(ctx);
         }
