@@ -181,8 +181,8 @@ bot.on('text', (ctx) => {
 
     }else if (comando == '/pts'){
 
-    }else if (comando == '/pedidos_dia'){
-
+    }else if (comando == '/pedidos_dia' || comando == '/pedidos_hora' || comando == '/pedidos_minuto'){
+        enviarMensagens.enviarMensagemDeEspera(ctx);
     }else{
          enviarMensagens.enviarComandos(ctx);
     }
