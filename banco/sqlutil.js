@@ -5,7 +5,7 @@ var dbConfig = require('./dbconfig.js');
 var numRows = 100;
 
 module.exports = {
-	executar_sql_o44prdg: function (sql_query, chatId, bot, caller) {
+	executar_sql_o44prdg: function (sql_query, chatId, bot, caller, enviaImagem) {
 
 
 		oracledb.getConnection(
@@ -48,7 +48,7 @@ module.exports = {
 							eturn;
 						}
 
-							caller.fetchRowsFromRS(connection, result.resultSet, numRows, chatId, bot);
+							caller.fetchRowsFromRS(connection, result.resultSet, numRows, chatId, bot, enviaImagem);
 						
 
 						
