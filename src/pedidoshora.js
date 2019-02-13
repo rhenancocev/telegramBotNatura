@@ -10,15 +10,17 @@ module.exports = {
  */
 	pedidos_hora: function(ctx, bot, enviaImagem)  {
 	
-	var sql_query = `select TRUNC(DT_FINALIZACAO_PEDIDO, 'HH') as HORA, 
-										count(NM_PEDIDO) as PEDIDOS 
-										from SISCPT.PEDIDO
+		var sql_query = `select TRUNC(p.DT_FINALIZACAO_PEDIDO, 'HH24') as HORA, count(p.NM_PEDIDO) as PEDIDOS from SISCPT.PEDIDO p
 		where
-		  trunc(DT_FINALIZACAO_PEDIDO) = trunc(sysdate)
-		  and ID_SITUACAO_PEDIDO in (3, 17)
-		  and nm_ciclo_pedido >= 201901
-		  and cd_canal_captacao IN (1, 8, 11)
-		group by TRUNC(DT_FINALIZACAO_PEDIDO, 'HH')
+			trunc(p.DT_FINALIZACAO_PEDIDO) = trunc(sysdate-1)
+			and p.ID_SITUACAO_PEDIDO in (3, 17)
+			and p.nm_ciclo_pedido in (select co.nm_ciclo_operacional from siscpt.t_ciclo_operacional co
+																		 where co.cd_tipo_estrutura_comercial = 0 
+																		 and trunc(sysdate) between trunc(co.dt_inicio_ciclo) 
+																		 and trunc (co.dt_termino_ciclo)
+																		 and co.nm_ciclo_operacional = p.nm_ciclo_pedido)
+			and p.cd_canal_captacao IN (1, 8, 11)
+		group by TRUNC(p.DT_FINALIZACAO_PEDIDO, 'HH24')
 		order by 1 asc`;
 
 		
@@ -41,9 +43,9 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 	        
 	        var retorno = "";
 			for (var i = 0; i < rows.length; i++) {
-				retorno += "" + moment(rows[i].HORA).format('h:mm') + " --> " + rows[i].PEDIDOS + " Pedidos\n";
+				retorno += "" + moment(rows[i].HORA).format('h:mm a') + " --> " + rows[i].PEDIDOS + " Pedidos\n";
 
-				eixoX[i] = moment(rows[i].HORA).format('h:mm');
+				eixoX[i] = moment(rows[i].HORA).format('h:mm a');
 				eixoY[i] = rows[i].PEDIDOS;
 			}
 			
