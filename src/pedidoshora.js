@@ -12,7 +12,7 @@ module.exports = {
 	
 		var sql_query = `select TRUNC(p.DT_FINALIZACAO_PEDIDO, 'HH24') as HORA, count(p.NM_PEDIDO) as PEDIDOS from SISCPT.PEDIDO p
 		where
-			trunc(p.DT_FINALIZACAO_PEDIDO) = trunc(sysdate-1)
+			trunc(p.DT_FINALIZACAO_PEDIDO) = trunc(sysdate)
 			and p.ID_SITUACAO_PEDIDO in (3, 17)
 			and p.nm_ciclo_pedido in (select co.nm_ciclo_operacional from siscpt.t_ciclo_operacional co
 																		 where co.cd_tipo_estrutura_comercial = 0 
@@ -58,7 +58,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			    var trace1 = {
 			      x: eixoX,
 			      y: eixoY,
-			      type: "scatter",
+			      type: "bar",
 			      mode:'lines+markers'
 			    };
 			    

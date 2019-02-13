@@ -60,7 +60,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			    var trace1 = {
 			      x: eixoX,
 			      y: eixoY,
-			      type: "scatter",
+			      type: "bar",
 			      mode:'lines+markers'
 			    };
 			    
