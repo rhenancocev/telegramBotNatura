@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -8,12 +9,7 @@ module.exports = {
 
   venc_boleto: function (ctx, bot, param) {
 
-    var sql_query = `select trunc(dt_cancelamento_pedido) as DATA, 
-    nm_pedido as PEDIDO,
-    dt_vencimento_boleto as DATA_BOLETO
-    from siscpt.pedido_dados_pagamento 
-    where nm_pedido = ${param}
-    and cd_forma_pagamento = 'ZVIS'`;
+    var sql_query = query.queryVencBoleto(param);
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 

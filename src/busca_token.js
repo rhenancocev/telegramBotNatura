@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -8,16 +9,7 @@ module.exports = {
 
   pk: function (ctx, bot, param) {
 
-    var sql_query = `SELECT PK_PAGSEGURO as PAGSEGURO
-    FROM (SELECT AUT.PK_PAGSEGURO
-        FROM SISMPGTO.T_CADASTRO_MPOS CAD,                         
-              SISMPGTO.T_NOTIFICACAO   NOTI,
-              SISMPGTO.T_AUTORIZACAO   AUT
-        WHERE CAD.CD_CADASTRO_MPOS = NOTI.CD_CADASTRO_MPOS
-        AND AUT.CD_NOTIFICACAO = NOTI.CD_NOTIFICACAO
-        AND CAD.CD_CONSULTORA = ${param}
-        ORDER BY CAD.DT_CRIACAO DESC)
-        WHERE ROWNUM=1`;
+    var sql_query = query.queryBuscarToken(param);
 
     sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
 

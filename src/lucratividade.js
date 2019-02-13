@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -8,18 +9,7 @@ module.exports = {
 
   lucratividade_pedido: function (ctx, bot, param) {
 
-    var sql_query = `select replace (round ((sum(ip.vl_unitario_tabela) - sum(ip.vl_unitario_sem_lucratividade))/sum(ip.vl_unitario_tabela),2)*100,'.','')||'%' as LUCRATIVIDADE,
-    ip.nm_pedido as PEDIDO,
-    nc.no_nivel as NIVEL_PEDIDO_FINALIZADO,
-    ip.nm_ciclo_pedido as CICLO
-    from siscpt.item_pedido ip,
-         siscpt.pedido_niveis_cn nc
-    where ip.nm_pedido = ${param}   
-    and ip.id_origem_item_pedido = 1
-    and ip.nm_pedido = nc.nm_pedido
-    and ip.nm_ciclo_pedido = nc.nm_ciclo_pedido
-    and (ip.vl_unitario_tabela - ip.vl_unitario_sem_lucratividade)/ip.vl_unitario_tabela > 0
-    group by ip.nm_pedido, NC.NO_NIVEL, ip.nm_ciclo_pedido`;
+    var sql_query = query.queryLucratividade(param);
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 

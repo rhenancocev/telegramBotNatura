@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -8,13 +9,7 @@ module.exports = {
 
   braspag: function (ctx, bot, param) {
 
-    var sql_query = `select p.id_order as NM_PEDIDO, 
-                            ts.dt_transacao as DATA_TRANSACAO,
-                            p.vr_pagamento as VALOR_PAGAMENTO,
-                            ts.ds_mensagem_adquirente as MOTIVO_CANCELAMENTO
-                      from sispgt.pagamentos p, sispgt.transacao_status ts
-                        where p.id_trans_payload = ts.id_trans_payload
-                              and p.id_order = ${param}`;
+    var sql_query = query.queryAutorizacaoBraspag(param);
 
     sqlutil.executar_sql_o68pr(sql_query, ctx, bot, this);
 
@@ -28,7 +23,6 @@ module.exports = {
       function (err, rows) {
         var retorno = "";
         var pedido = "";
-        var data = "";
         var motivoCancelamento = "";
         var valorPagamento = ""
 

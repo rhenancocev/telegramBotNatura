@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -10,21 +11,7 @@ module.exports = {
  */
 	pedidos_minuto: function(ctx, bot, enviaImagem)  {
 	
-	var sql_query = `select TRUNC(p.DT_FINALIZACAO_PEDIDO, 'MI') as MINUTO, 
-													count(p.NM_PEDIDO) as PEDIDOS 
-													from SISCPT.PEDIDO p
-										where p.DT_FINALIZACAO_PEDIDO >= (sysdate -1/24)
-													and p.DT_FINALIZACAO_PEDIDO <= (sysdate +1/24)
-		  										and p.ID_SITUACAO_PEDIDO in (3, 17)
-													and p.nm_ciclo_pedido in (select co.nm_ciclo_operacional 
-																											from siscpt.t_ciclo_operacional co
-																											where co.cd_tipo_estrutura_comercial = 0 
-																														and trunc(sysdate) between trunc(co.dt_inicio_ciclo) 
-																														and trunc (co.dt_termino_ciclo)
-																														and co.nm_ciclo_operacional = p.nm_ciclo_pedido)
-		  										and p.cd_canal_captacao IN (1, 8, 11)
-													group by TRUNC(p.DT_FINALIZACAO_PEDIDO, 'MI')
-													order by 1 asc`;
+	var sql_query = query.queryPedidosMinuto;
 
 	sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this, enviaImagem);
 

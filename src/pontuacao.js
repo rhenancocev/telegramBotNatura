@@ -1,6 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('../banco/dbconfig.js');
 var sqlutil = require('../banco/sqlutil.js');
+var query = require('../tools/query');
 const moment = require('moment');
 
 module.exports = {
@@ -8,23 +9,7 @@ module.exports = {
 
   pontuacao_disponivel: function (ctx, bot, param) {
 
-    var sql_query = `SELECT CC.CD_PESSOA as CD_PESSOA, 
-                            TPF.NO_COMPLETO as NO_COMPLETO, 
-                            (CC.QT_PONTO_CREDITO_TOTAL - CC.QT_PONTO_CREDITO_COMPROMETIDO) AS QT_PONTO_DISPONIVEL,
-                            CN.NO_NIVEL_ATUAL AS NIVEL,
-                            CC.PC_CREDITO_EXCEDENTE || '%' AS PC_CREDITO_EXCEDENTE,
-                            CC.PC_CREDITO_ADICIONAL || '%' AS PC_CREDITO_ADICIONAL,
-                            CC.QT_PONTO_CREDITO_COMPROMETIDO AS CREDITO_COMPROMETIDO,
-                            round((CC.QT_PONTO_CREDITO_TOTAL * CC.PC_CREDITO_EXCEDENTE/100)+ CC.QT_PONTO_CREDITO_TOTAL,0) - CC.QT_PONTO_CREDITO_COMPROMETIDO as CREDITO_TOTAL_EXCEDENTE,
-                            round((CC.QT_PONTO_CREDITO_TOTAL * CC.PC_CREDITO_ADICIONAL/100)+ CC.QT_PONTO_CREDITO_TOTAL,0) - CC.QT_PONTO_CREDITO_COMPROMETIDO as CREDITO_TOTAL_ADICIONAL,  
-                            round((CC.QT_PONTO_CREDITO_TOTAL * (CC.PC_CREDITO_EXCEDENTE + CC.PC_CREDITO_ADICIONAL)/100)+ CC.QT_PONTO_CREDITO_TOTAL,0) - CC.QT_PONTO_CREDITO_COMPROMETIDO as CREDITO_TOTAL_ADI_EXCE
-                      FROM SISCPT.CONSULTORA_CAPTACAO CC,
-                           SISCAD.T_PESSOA_FISICA TPF,
-                           SISCPT.CONSULTORA_NIVEIS CN
-                      WHERE CC.CD_PESSOA = TPF.CD_PESSOA
-                            AND CC.CD_PESSOA = CN.CD_PESSOA
-                            AND DT_TERMINO_NIVEL_ATUAL IS NULL
-                            AND CC.CD_PESSOA = ${param}`;
+    var sql_query = query.queryPontuacao(param);
 
     sqlutil.executar_sql_o44prdg(sql_query, ctx, bot, this);
 
