@@ -18,6 +18,7 @@ const bot = new TelegramBot(env.token, { polling: true });
 var PessoasAutorizadas = env.pessoasAutorizadas;
 var PessoasAutorizadasExecutarPedido = env.PessoasAutorizadasExecutarPedido;
 
+// / pk - mostra a PK da consultora
 bot.onText(/\/pk/, (ctx,match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -40,6 +41,7 @@ bot.onText(/\/pk/, (ctx,match) => {
     }
 });
 
+// / lucra -  mostra a lucratividade e nivel do pedido que foi finalizado
 bot.onText(/\/lucra/, (ctx, match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -62,6 +64,7 @@ bot.onText(/\/lucra/, (ctx, match) => {
 
 });
 
+// /status - mostra o status atual de um determinado pedido
 bot.onText(/\/status/, (ctx,match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -83,6 +86,7 @@ bot.onText(/\/status/, (ctx,match) => {
     }
 });
 
+// / cartao - mostra o status de aprovacao/reprovacao do cartao que foi feito o pedido
 bot.onText(/\/cartao/, (ctx,match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -104,6 +108,7 @@ bot.onText(/\/cartao/, (ctx,match) => {
     }
 });
 
+// /pts - mostra a relacao de pontos que a CN tem disponivel
 bot.onText(/\/pts/, (ctx, match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -124,8 +129,9 @@ bot.onText(/\/pts/, (ctx, match) => {
             funcoes.autorizacaoNegada(ctx);
         }
     }
-})
+});
 
+// / boleto - mostra data de vencimento do boleto e cancelamento do pedido
 bot.onText(/\/boleto/, (ctx, match) => {
     const chatId = ctx.chat.id;
     const texto = ctx.text;
@@ -140,10 +146,7 @@ bot.onText(/\/boleto/, (ctx, match) => {
 
     if (!funcoes.isNumber(num_pedido)){
         enviarMensagens.enviarRespostaIfNotNumber(ctx, num_pedido, y);
-    }/*else {
-        vencboleto.venc_boleto(ctx, bot, num_pedido);
-    }*/
-    else if(autorizado){
+    } else if(autorizado){
         vencboleto.venc_boleto(ctx, bot, num_pedido);
         } else{
             funcoes.autorizacaoNegada(ctx);
@@ -151,7 +154,7 @@ bot.onText(/\/boleto/, (ctx, match) => {
     }
 });
 
-// /pedidos_dia - Listar quantidade de pedidos dos últimos 30 dias
+// /pedidos_dia - Listar quantidade de pedidos dos últimos 10 dias
 bot.onText(/\/pedidos_dia/, (ctx, match) => {
     const chatId = ctx.chat.id;
     var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
@@ -162,6 +165,7 @@ bot.onText(/\/pedidos_dia/, (ctx, match) => {
         }
 });
 
+// /pedidos_dia - Listar quantidade de pedidos por hora (no dia atual)
 bot.onText(/\/pedidos_hora/, (ctx, match) => {
     const chatId = ctx.chat.id;
     var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
@@ -171,7 +175,7 @@ bot.onText(/\/pedidos_hora/, (ctx, match) => {
             funcoes.autorizacaoNegada(ctx);
         }
 });
-
+// /pedidos_dia - Listar quantidade de pedidos por minuto no range de 1 hora
 bot.onText(/\/pedidos_minuto/, (ctx, match) => {
     const chatId = ctx.chat.id;
     var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
