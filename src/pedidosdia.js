@@ -21,6 +21,9 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 	  resultSet.getRows(
 	    numRows,  // get this many rows
 	    function (err, rows) {
+				var chatId = ctx.chat.id;
+				var nome = ctx.from.first_name;
+
 	      if (err) {
 	        console.error(err);
 	        doClose(connection, resultSet);   // always close the ResultSet
@@ -30,9 +33,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 	        var eixoX = [];
 	        var eixoY = [];
 	        
-	        var retorno = "";
 			for (var i = 0; i < rows.length; i++) {
-				retorno += "" + moment(rows[i].DIA).format('DD-MM') + " --> " + rows[i].PEDIDOS + " Pedidos\n";
 
 				eixoX[i] = moment(rows[i].DIA).format('DD-MM-YYYY');
 				eixoY[i] = rows[i].PEDIDOS;
@@ -52,7 +53,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			    };
 			    
 			    let layout = {  // Chart Layout
-			            title: ctx.from.first_name + ': Pedidos por Dia dos ultimos 10 dias',   // Chart Title
+			            title: nome + ': Pedidos por Dia dos ultimos 10 dias',   // Chart Title
 			            xaxis: {
 			                title: 'Dia'    // X axis title
 			            },
@@ -69,22 +70,18 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			        height: 500
 			    };
 			    
-			    var fileName = 'dia' + ctx.chat.id + '.png';
+			    var fileName = 'dia' + chatId + '.png';
 	
 			    plotly.getImage(figure, imgOpts, function (error, imageStream) {
 			        if (error) {
 				        console.log('error' + error);
 			        	return;
 			        }
-	
-			        console.log('a');
 			        var fileStream = fs.createWriteStream(fileName);
-			        
-			        console.log('b');
 	
 			        fileStream.on('finish', () => {
-				        console.log('c');
-				     	   bot.sendMediaGroup(ctx.chat.id, [
+
+				     	   bot.sendMediaGroup(chatId, [
 				     	        {
 				     	          type: 'photo',
 				     	          //media: layout
@@ -95,14 +92,9 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 				     	      });
 			        	});
 				        
-			        imageStream.pipe(fileStream);
-	
-			        
+			        imageStream.pipe(fileStream); 
 			    });
-			} else {
-				
-				bot.sendMessage(ctx.chat.id, "" + retorno);
-			}
+			};
 
 			if (rows.length === numRows)      // might be more rows
 	          fetchRowsFromRS(connection, resultSet, numRows);

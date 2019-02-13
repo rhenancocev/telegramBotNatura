@@ -19,6 +19,9 @@ module.exports = {
 
 
 fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem) {
+	var chatId = ctx.chat.id;
+	var nome = ctx.from.first_name;
+
 	  resultSet.getRows(
 	    numRows,  // get this many rows
 	    function (err, rows) {
@@ -30,10 +33,8 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			
 	        var eixoX = [];
 	        var eixoY = [];
-	        
-	        var retorno = "";
+
 			for (var i = 0; i < rows.length; i++) {
-				retorno += "" + moment(rows[i].MINUTO).format('h:mm') + " --> " + rows[i].PEDIDOS + " Pedidos\n";
 
 				eixoX[i] = moment(rows[i].MINUTO).format('h:mm a');
 				eixoY[i] = rows[i].PEDIDOS;
@@ -52,7 +53,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			    };
 			    
 			    let layout = {  // Chart Layout
-			            title: ctx.from.first_name + ': Pedidos por Minuto',   // Chart Title
+			            title: nome + ': Pedidos por Minuto',   // Chart Title
 			            xaxis: {
 			                title: 'Minuto'    // X axis title
 			            },
@@ -69,19 +70,15 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 			        height: 500
 			    };
 			    
-			    var fileName = 'minuto' + ctx.chat.id + '.png';
+			    var fileName = 'minuto' + chatId + '.png';
 	
 			    plotly.getImage(figure, imgOpts, function (error, imageStream) {
 			        if (error) return;
-	
-			        console.log('aqui');
 			        
 			        var fileStream = fs.createWriteStream(fileName);
 				        
-			        console.log('aqui9');
-				        
 				        fileStream.on('finish', () => {
-					     	   bot.sendMediaGroup(ctx.chat.id, [
+					     	   bot.sendMediaGroup(chatId, [
 					     	        {
 					     	          type: 'photo',
 					     	          //media: layout
@@ -96,10 +93,7 @@ fetchRowsFromRS: function (connection, resultSet, numRows, ctx, bot, enviaImagem
 	
 			        
 			    });
-			} else {
-				bot.sendMessage(ctx.chat.id, "" + retorno);
-			}
-		    
+			};
 
 			if (rows.length === numRows)      // might be more rows
 	          fetchRowsFromRS(connection, resultSet, numRows);
