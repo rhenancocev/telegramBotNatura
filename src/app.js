@@ -185,6 +185,8 @@ bot.onText(/\/pedidos_minuto/, (ctx, match) => {
 bot.on('text', (ctx) => {
 
     console.log('ctx', ctx);
+    const chatId = ctx.chat.id;
+    var autorizado = funcoes.autorizacao(PessoasAutorizadasExecutarPedido, chatId);
 
     a = ctx.text.split(" ");
      const comando = a[0];
@@ -204,7 +206,9 @@ bot.on('text', (ctx) => {
     }else if (comando == '/pts'){
 
     }else if (comando == '/pedidos_dia' || comando == '/pedidos_hora' || comando == '/pedidos_minuto'){
-        enviarMensagens.enviarMensagemDeEspera(ctx);
+        if(autorizado){
+            enviarMensagens.enviarMensagemDeEspera(ctx);
+        }
     }else{
          enviarMensagens.enviarComandos(ctx);
     }
