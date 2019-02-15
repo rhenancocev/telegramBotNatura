@@ -10,13 +10,14 @@ var pedidosminuto = require('./pedidosminuto.js');
 var enviarMensagens = require('../tools/enviarMensagens');
 var funcoes = require('../tools/funcoes');
 const env = require('../tokenAcesso/.env');
+const acesso = require('../tokenAcesso/acesso');
 const TelegramBot = require('node-telegram-bot-api');
 // replace the value below with the Telegram token you receive from @BotFather
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(env.token, { polling: true });
-var PessoasAutorizadas = env.pessoasAutorizadas;
-var PessoasAutorizadasExecutarPedido = env.PessoasAutorizadasExecutarPedido;
+var PessoasAutorizadas = acesso.pessoasAutorizadas;
+var PessoasAutorizadasExecutarPedido = acesso.PessoasAutorizadasExecutarPedido;
 
 // / pk - mostra a PK da consultora
 bot.onText(/\/pk/, (ctx,match) => {
